@@ -67,6 +67,7 @@ public class MainViewController implements Initializable {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		}
 	}
+	
 	private synchronized void loadView(String absolutePath) {
 		loadView(absolutePath, x -> {});
 	}
