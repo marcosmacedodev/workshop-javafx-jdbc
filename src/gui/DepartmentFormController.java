@@ -3,9 +3,12 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import entities.Department;
+import exceptions.ValidationException;
 import gui.listener.DataChangeListener;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -42,10 +45,14 @@ public class DepartmentFormController implements Initializable {
 		if (departmentService == null) {
 			throw new IllegalStateException("DepartmentService was null");
 		}
-		entity = getFormData();
-		departmentService.saveOrUpdate(entity);
-		notifyDataChangeListener();
-		updateFormData();
+		try {
+			entity = getFormData();
+			departmentService.saveOrUpdate(entity);
+			notifyDataChangeListener();
+			updateFormData();
+		}catch(ValidationException e) {
+			setErrorMessages(e.getErrors());
+		}
 		//Utils.currentStage(event).close();
 	}
 	private void notifyDataChangeListener() {
@@ -56,9 +63,16 @@ public class DepartmentFormController implements Initializable {
 		
 	}
 	private Department getFormData() {
-		// TODO Auto-generated method stub
+		ValidationException exception = new ValidationException();
 		Integer id = Utils.tryParseToInt(txtFieldId.getText());
 		String name = txtFieldName.getText();
+		if(name == null || name.trim().equals("")) {
+			exception.addError("name", "Field can't be empty.");
+		}
+		
+		if(exception.getErrors().size() > 0) {
+			throw exception;
+		}
 		return new Department(id, name);
 	}
 	@FXML
@@ -90,5 +104,12 @@ public class DepartmentFormController implements Initializable {
 	
 	public void subscribeDataChange(DataChangeListener listener) {
 		dataChangeListeners.add(listener);
+	}
+	
+	private void setErrorMessages(Map<String, String> errors) {
+		Set<String> fields = errors.keySet();
+		if(fields.contains("name")) {
+			lbError.setText(errors.get("name"));
+		}
 	}
 }
