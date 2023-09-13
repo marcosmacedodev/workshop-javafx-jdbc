@@ -12,9 +12,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import services.DepartmentService;
 
 public class DepartmentFormController implements Initializable {
 
+	private DepartmentService departmentService;
+	
 	private Department entity;
 	@FXML
 	private Label lbError;
@@ -28,7 +31,22 @@ public class DepartmentFormController implements Initializable {
 	private TextField txtFieldName;
 	@FXML
 	public void onBtSaveAction() {
-		System.out.println("onBtSaveAction");
+		if(entity == null) {
+			throw new IllegalStateException("Entity was null");
+		}
+		if (departmentService == null) {
+			throw new IllegalStateException("DepartmentService was null");
+		}
+		entity = getFormData();
+		departmentService.saveOrUpdate(entity);
+		updateFormData();
+		//Utils.currentStage(event).close();
+	}
+	private Department getFormData() {
+		// TODO Auto-generated method stub
+		Integer id = Utils.tryParseToInt(txtFieldId.getText());
+		String name = txtFieldName.getText();
+		return new Department(id, name);
 	}
 	@FXML
 	public void onBtCancelAction(ActionEvent event) {
@@ -51,5 +69,9 @@ public class DepartmentFormController implements Initializable {
 		}
 		txtFieldId.setText(String.valueOf(entity.getId()));
 		txtFieldName.setText(entity.getName());
+	}
+	
+	public void setDepartmentService(DepartmentService departmentService) {
+		this.departmentService = departmentService;
 	}
 }

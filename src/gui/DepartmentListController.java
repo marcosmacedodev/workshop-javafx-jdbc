@@ -27,7 +27,7 @@ import services.DepartmentService;
 
 public class DepartmentListController implements Initializable{
 
-	private DepartmentService service;
+	private DepartmentService departmentService;
 	@FXML
 	private Button btNewDepartment;
 	@FXML
@@ -51,15 +51,15 @@ public class DepartmentListController implements Initializable{
 		tbColumnNameDepartment.setCellValueFactory(new PropertyValueFactory<>("name"));
 	}
 
-	public void setService(DepartmentService service) {
-		this.service = service;
+	public void setDepartmentService(DepartmentService departmentService) {
+		this.departmentService = departmentService;
 	}
 	
 	public void updateTableView() {
-		if(service == null) {
+		if(departmentService == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Department> departments =  service.findAll();
+		List<Department> departments =  departmentService.findAll();
 		obsList = FXCollections.observableArrayList(departments);
 		tbViewDepartment.setItems(obsList);
 	}
@@ -71,6 +71,7 @@ public class DepartmentListController implements Initializable{
 			
 			DepartmentFormController controller = loader.getController();
 			controller.setEntity(entity);
+			controller.setDepartmentService(departmentService);
 			controller.updateFormData();
 			
 			Stage dialogStage = new Stage();
