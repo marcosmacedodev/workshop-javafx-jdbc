@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import entities.Department;
+import gui.listener.DataChangeListener;
 import gui.util.Constraints;
 import gui.util.Utils;
 import javafx.event.ActionEvent;
@@ -19,6 +22,8 @@ public class DepartmentFormController implements Initializable {
 	private DepartmentService departmentService;
 	
 	private Department entity;
+	
+	List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 	@FXML
 	private Label lbError;
 	@FXML
@@ -39,8 +44,16 @@ public class DepartmentFormController implements Initializable {
 		}
 		entity = getFormData();
 		departmentService.saveOrUpdate(entity);
+		notifyDataChangeListener();
 		updateFormData();
 		//Utils.currentStage(event).close();
+	}
+	private void notifyDataChangeListener() {
+		
+		for(DataChangeListener listener: dataChangeListeners) {
+			listener.onDataChange();
+		}
+		
 	}
 	private Department getFormData() {
 		// TODO Auto-generated method stub
@@ -73,5 +86,9 @@ public class DepartmentFormController implements Initializable {
 	
 	public void setDepartmentService(DepartmentService departmentService) {
 		this.departmentService = departmentService;
+	}
+	
+	public void subscribeDataChange(DataChangeListener listener) {
+		dataChangeListeners.add(listener);
 	}
 }
