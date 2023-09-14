@@ -125,7 +125,7 @@ public class SellerDaoImpl implements SellerDAO{
 			if(rs.next()) {
 				String name = rs.getString("Name");
 				String email = rs.getString("Email");
-				Date birthDate = rs.getDate("BirthDate");
+				Date birthDate = new Date(rs.getTimestamp("BirthDate").getTime());
 				Double baseSalary = rs.getDouble("BaseSalary");
 				String depName = rs.getString("DepName");
 				Integer departmentId = rs.getInt("DepartmentId");
@@ -159,7 +159,7 @@ public class SellerDaoImpl implements SellerDAO{
 				Integer id = rs.getInt("Id");
 				String name = rs.getString("Name");
 				String email = rs.getString("Email");
-				Date birthDate = rs.getDate("BirthDate");
+				Date birthDate = new Date(rs.getTimestamp("BirthDate").getTime());
 				Double baseSalary = rs.getDouble("BaseSalary");
 				if(department.get(rs.getInt("DepartmentId")) == null) {
 					String depName = rs.getString("DepName");

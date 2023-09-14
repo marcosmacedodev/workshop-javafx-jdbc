@@ -1,14 +1,18 @@
 package gui.util;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class Utils {
 
@@ -16,11 +20,20 @@ public class Utils {
 		return (Stage) ((Node) event.getSource()).getScene().getWindow();
 	}
 
-	public static boolean isParseToInt(String s) {
+	public static boolean isValidParseToInt(String s) {
 		try {
 			Integer.parseInt(s);
 			return true;
 		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	
+	public static boolean isValidParseToDouble(String s) {
+		try {
+			Double.parseDouble(s);
+			return true;
+		} catch (NumberFormatException|NullPointerException e) {
 			return false;
 		}
 	}
@@ -29,6 +42,14 @@ public class Utils {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+	
+	public static Double tryParseToDouble(String s) {
+		try {
+			return Double.parseDouble(s);
+		} catch (NumberFormatException|NullPointerException e) {
 			return null;
 		}
 	}
@@ -67,6 +88,34 @@ public class Utils {
 				}
 			};
 			return cell;
+		});
+	}
+
+	public static void formatDatePicker(DatePicker datePicker, String format) {
+		datePicker.setConverter(new StringConverter<LocalDate>() {
+
+			DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(format);
+			{
+				datePicker.setPromptText(format.toLowerCase());
+			}
+
+			@Override
+			public String toString(LocalDate date) {
+				if (date != null) {
+					return dateFormatter.format(date);
+				} else {
+					return "";
+				}
+			}
+
+			@Override
+			public LocalDate fromString(String string) {
+				if (string != null && !string.isEmpty()) {
+					return LocalDate.parse(string, dateFormatter);
+				} else {
+					return null;
+				}
+			}
 		});
 	}
 }
