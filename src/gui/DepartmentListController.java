@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -43,7 +44,40 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	@FXML
 	public void onBtNewAction(ActionEvent event) {
 		Department entity = new Department();
-		this.createDialogForm(entity, "/gui/DepartmentForm.fxml", Utils.currentStage(event));
+		createDialogForm(entity, "/gui/DepartmentForm.fxml", Utils.currentStage(event));
+	}
+	
+	@FXML
+	public void onBtEditAction(ActionEvent event) {
+		Department entity = tbViewDepartment.getSelectionModel().getSelectedItem();
+		if(entity == null) {
+			Alerts.showAlert("Aviso", null, "Selecione algum item", AlertType.WARNING);
+		}
+		else {
+			createDialogForm(entity, "/gui/DepartmentForm.fxml", Utils.currentStage(event));
+		}
+	}
+	
+	@FXML
+	public void onBtDeleteAction(ActionEvent event) {
+		Department entity = tbViewDepartment.getSelectionModel().getSelectedItem();
+		if(entity == null) {
+			Alerts.showAlert("Aviso", null, "Selecione algum item", AlertType.WARNING);
+		}
+		else {
+			ButtonType buttonType = Alerts.showAlert(null, null, "Remover o item id " + entity.getId() + "?", AlertType.CONFIRMATION);
+			if(buttonType == ButtonType.OK) {
+				departmentService.delete(entity);
+				updateTableView();
+			}else if(buttonType == ButtonType.CANCEL) {
+				Alerts.showAlert(null, null, "Ação cancelada pelo usuário", AlertType.INFORMATION);
+			}
+		}
+	}
+	
+	@FXML
+	public void onBtUpAction(ActionEvent event) {
+	
 	}
 	
 	@Override
