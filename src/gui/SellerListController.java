@@ -26,11 +26,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import services.DepartmentService;
 import services.SellerService;
 
 public class SellerListController implements Initializable, DataChangeListener{
 
-	private SellerService departmentService;
+	private SellerService sellerService;
 	@FXML
 	private Button btNewSeller;
 	@FXML
@@ -45,7 +46,6 @@ public class SellerListController implements Initializable, DataChangeListener{
 	private TableColumn<Seller, Date> tbColumnBirthDateSeller;
 	@FXML
 	private TableColumn<Seller, Double> tbColumnBaseSalarySeller;
-	
 	
 	private ObservableList<Seller> obsList;
 	
@@ -75,17 +75,12 @@ public class SellerListController implements Initializable, DataChangeListener{
 		else {
 			ButtonType buttonType = Alerts.showAlert(null, null, "Remover o item id " + entity.getId() + "?", AlertType.CONFIRMATION);
 			if(buttonType == ButtonType.OK) {
-				departmentService.delete(entity);
+				sellerService.delete(entity);
 				updateTableView();
 			}else if(buttonType == ButtonType.CANCEL) {
 				Alerts.showAlert(null, null, "Ação cancelada pelo usuário", AlertType.INFORMATION);
 			}
 		}
-	}
-	
-	@FXML
-	public void onBtUpAction(ActionEvent event) {
-	
 	}
 	
 	@Override
@@ -99,16 +94,16 @@ public class SellerListController implements Initializable, DataChangeListener{
 		Utils.formatTableColumnDouble(tbColumnBaseSalarySeller, 2);
 	}
 
-	public void setSellerService(SellerService departmentService) {
-		this.departmentService = departmentService;
+	public void setSellerService(SellerService sellerService) {
+		this.sellerService = sellerService;
 	}
 	
 	public void updateTableView() {
-		if(departmentService == null) {
+		if(sellerService == null) {
 			throw new IllegalStateException("Service was null");
 		}
-		List<Seller> departments =  departmentService.findAll();
-		obsList = FXCollections.observableArrayList(departments);
+		List<Seller> sellers =  sellerService.findAll();
+		obsList = FXCollections.observableArrayList(sellers);
 		tbViewSeller.setItems(obsList);
 	}
 
@@ -119,7 +114,9 @@ public class SellerListController implements Initializable, DataChangeListener{
 			
 			SellerFormController controller = loader.getController();
 			controller.setEntity(entity);
-			controller.setSellerService(departmentService);
+			controller.setSellerService(sellerService);
+			controller.setDepartmentService(new DepartmentService());
+			controller.loadComboBoxDepartment();
 			controller.subscribeDataChange(this);
 			controller.updateFormData();
 			

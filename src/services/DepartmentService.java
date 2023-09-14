@@ -14,7 +14,13 @@ public class DepartmentService {
 	private DepartmentDAO departmentDAO = DaoFactory.createDepartamentDAO();
 	
 	public List<Department> findAll(){
-		return departmentDAO.findAll();
+		try {
+			return departmentDAO.findAll();
+		}
+		catch(DbException e) {
+			Alerts.showAlert("Error saving entity", null, e.getMessage(), AlertType.ERROR);
+			return null;
+		}
 	}
 	
 	public void saveOrUpdate(Department entity) {
