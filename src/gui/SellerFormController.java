@@ -67,6 +67,7 @@ public class SellerFormController implements Initializable {
 	private TextField txtFieldBaseSalary;
 	@FXML
 	private ComboBox<Department> cbDepartments;
+	
 	private ObservableList<Department> obsList;
 
 	@FXML
@@ -124,7 +125,7 @@ public class SellerFormController implements Initializable {
 			throw exception;
 		}
 		return new Seller(id, name, email,
-				Date.from(birthDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()), baseSalary, null);
+				Date.from(birthDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()), baseSalary, department);
 	}
 
 	@FXML
@@ -181,6 +182,12 @@ public class SellerFormController implements Initializable {
 	}
 
 	private void setErrorMessages(Map<String, String> errors) {
+		lbErrorName.setText("");
+		lbErrorEmail.setText("");
+		lbErrorBirthDate.setText("");
+		lbErrorBaseSalary.setText("");
+		lbErrorDepartment.setText("");
+		
 		Set<String> fields = errors.keySet();
 		if (fields.contains("name")) {
 			lbErrorName.setText(errors.get("name"));

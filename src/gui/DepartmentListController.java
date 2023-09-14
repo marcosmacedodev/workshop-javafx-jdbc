@@ -75,11 +75,6 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		}
 	}
 	
-	@FXML
-	public void onBtUpAction(ActionEvent event) {
-	
-	}
-	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		tbColumnIdDepartment.setCellValueFactory(new PropertyValueFactory<>("id"));

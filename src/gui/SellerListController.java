@@ -105,6 +105,7 @@ public class SellerListController implements Initializable, DataChangeListener{
 		List<Seller> sellers =  sellerService.findAll();
 		obsList = FXCollections.observableArrayList(sellers);
 		tbViewSeller.setItems(obsList);
+		tbViewSeller.refresh();
 	}
 
 	private void createDialogForm(Seller entity, String absolutePath, Stage parentStage) {
