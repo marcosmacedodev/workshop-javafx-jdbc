@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import application.Main;
 import entities.Department;
 import gui.listener.DataChangeListener;
 import gui.util.Alerts;
@@ -79,6 +80,9 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	public void initialize(URL url, ResourceBundle rb) {
 		tbColumnIdDepartment.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tbColumnNameDepartment.setCellValueFactory(new PropertyValueFactory<>("name"));
+		
+		Stage stage = (Stage) Main.getMainScene().getWindow();
+		tbViewDepartment.prefHeightProperty().bind(stage.heightProperty());
 	}
 
 	public void setDepartmentService(DepartmentService departmentService) {

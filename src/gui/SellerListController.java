@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import application.Main;
 import entities.Seller;
 import gui.listener.DataChangeListener;
 import gui.util.Alerts;
@@ -92,6 +93,9 @@ public class SellerListController implements Initializable, DataChangeListener{
 		Utils.formatTableColumnDate(tbColumnBirthDateSeller, "dd/MM/yyyy");
 		tbColumnBaseSalarySeller.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
 		Utils.formatTableColumnDouble(tbColumnBaseSalarySeller, 2);
+		
+		Stage stage = (Stage) Main.getMainScene().getWindow();
+		tbViewSeller.prefHeightProperty().bind(stage.heightProperty());
 	}
 
 	public void setSellerService(SellerService sellerService) {
